@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-width: 320px;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.ant-typography, h1, h2, h3, h4, h5 {
+  font-family: 'Lexend', sans-serif;
+}

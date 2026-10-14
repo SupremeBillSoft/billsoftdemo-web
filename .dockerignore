@@ -1,0 +1,13 @@
+# Build inside the container from a clean tree.
+node_modules/
+dist/
+.git
+.gitignore
+.env
+.env.*
+*.log
+.vscode/
+.idea/
+.DS_Store
+Dockerfile
+.dockerignore
