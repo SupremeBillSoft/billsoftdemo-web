@@ -40,7 +40,7 @@ import type {
   ReportRequest,
   RunResponse,
 } from "./types";
-import { ParentOnceOption } from "./ParentOnceOption";
+// #import { ParentOnceOption } from "./ParentOnceOption";
 
 const EXPORT_MESSAGE_KEY = "report-export";
 const sleep = (ms: number) =>
@@ -368,7 +368,8 @@ export default function MasterReportPage() {
               <Spin spinning={running}>
                 <ReportPreview
                   result={result}
-                  showBusinessHeader={showBusinessHeader}
+                  showBusinessHeader={showBusinessHeader}                  
+                  parentOnce={parentOnce}          
                   showSerialNo={showSerialNo}
                   page={page}
                   pageSize={pageSize}

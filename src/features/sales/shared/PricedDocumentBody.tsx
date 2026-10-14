@@ -5,7 +5,7 @@
 // owns the values; this renders them and reports edits back by field.
 
 import { useMemo } from "react";
-import { Divider, Grid, Input } from "antd";
+import { Divider,  Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { LineTaxContext } from "../../../lib/gst/lineTax";
 import { useItemsQuery } from "../../items/api";

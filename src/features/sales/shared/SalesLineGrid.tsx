@@ -189,15 +189,15 @@ export function SalesLineGrid<T extends SalesLineRow>({
     cellEditor: "agNumberCellEditor",
     cellEditorParams: (p: ICellEditorParams<R>) => ({ min: 0, max: p.data ? opts.max?.(p.data) : undefined }),
   });
-
-  const computedCol = (colId: string, headerName: string, key: keyof PricedLineResult, bold = false): ColDef<R> => ({
+  
+  const computedCol = (colId: string, headerName: string, key: keyof PricedLineResult, bold = false): ColDef<R> => ({     
     colId,
     headerName,
     width: 100,
     type: "rightAligned",
     valueGetter: (p) => p.data?.__priced?.[key] as number | undefined,
     valueFormatter: (p) => money(p.value),
-    cellStyle: { ...COMPUTED, fontWeight: bold ? 600 : undefined },
+    cellStyle: { ...COMPUTED, ...(bold ? { fontWeight: 600 } : {}) },
   });
 
   const columnDefs: ColDef<R>[] = [
@@ -263,7 +263,7 @@ export function SalesLineGrid<T extends SalesLineRow>({
     computedCol("cgst", "CGST", "cgst"),
     computedCol("sgst", "SGST", "sgst"),
     computedCol("igst", "IGST", "igst"),
-    computedCol("amount", "Amount", "lineTotal", true),
+    computedCol("amount", "Amount", "lineTotal", true),    
     ...fromAntd<R>(trailingColumns as unknown as ColumnsType<R>, "trail"),
     ...(readOnly
       ? []

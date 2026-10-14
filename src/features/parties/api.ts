@@ -5,6 +5,9 @@ import { apiClient } from "../../lib/api-client";
 import type { Party, PartySubType } from "./types";
 import type { PartyFormValues } from "./schema";
 
+export type PartyKind = "customer" | "vendor";
+export interface PartyLookup { id: number; partyCode: string; partyName: string }
+
 const partyKeys = {
   all: ["parties"] as const,
   detail: (partyCode: string) => [...partyKeys.all, "detail", partyCode] as const,

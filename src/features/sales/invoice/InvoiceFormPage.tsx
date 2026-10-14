@@ -59,7 +59,7 @@ import { PRICED_DEFAULTS, cleanCustomFields, linesFromServer, pricedDocumentShap
 import { EMPTY_SHIP_TO, ShipToFields, pickShipTo, type ShipToValues } from "../shared/ShipToFields";
 import { invoiceApi } from "./api";
 import { INVOICE_TYPE_OPTIONS, PAYMENT_MODES, TAX_NATURE_OPTIONS, type InvoiceType, type SalesInvoiceLine } from "./types";
-import { CompactForm, FORM_GRID } from "../../../components/CompactForm";
+import { FORM_GRID } from "../../../components/CompactForm";
 
 const invoiceSchema = z.object({
   ...pricedDocumentShape,

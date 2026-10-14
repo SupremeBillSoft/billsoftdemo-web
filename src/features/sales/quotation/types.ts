@@ -7,6 +7,7 @@ export type QuotationStatus = "Draft" | "Sent" | "Accepted" | "Declined" | "Conv
 export interface Quotation extends PricedDocumentFields {
   id: number;
   quotationNumber: string;
+  quotationYearCode: string;
   quotationDate: string;
   validTill: string | null;
   enquiry: number | null;

@@ -15,14 +15,14 @@ export const FORM_GRID: CSSProperties = {
   columnGap: 32,
 };
 
-export function CompactForm<T = unknown>(props: FormProps<T>) {
+export function CompactForm<T = unknown>({ children, ...rest }: FormProps<T>) {
   return (
     <ConfigProvider
       theme={{
-        token: { marginLG: 12 }, // vertical space around <Divider> sections (was 24)
+        token: { marginLG: 12 },
         components: {
           Form: {
-            itemMarginBottom: 12, // was 24
+            itemMarginBottom: 12,
             labelFontSize: 13,
           },
         },
@@ -35,8 +35,10 @@ export function CompactForm<T = unknown>(props: FormProps<T>) {
         colon={false}
         labelCol={{ flex: "130px" }}
         wrapperCol={{ flex: "auto", style: { minWidth: 0 } }}
-        {...props}
-      />
+        {...rest}
+      >
+        {children as never}
+      </Form>
     </ConfigProvider>
   );
 }

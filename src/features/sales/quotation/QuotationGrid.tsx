@@ -17,7 +17,7 @@
 // server pricing keep working. Props match SalesLineGrid so PricedDocumentBody
 // can take this through its `Grid` prop (itemOptions / canAddItems / makeRow are ignored).
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Button } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import { AgGridReact } from "ag-grid-react";
@@ -25,6 +25,7 @@ import {
   AllCommunityModule,
   ModuleRegistry,
   type CellClassParams,
+  type CellStyle,
   type CellValueChangedEvent,
   type ColDef,
   type GridApi,
@@ -35,7 +36,6 @@ import type { LineTaxContext } from "../../../lib/gst/lineTax";
 import { useUnitsQuery } from "../../uom/api";
 import type { PricedLineResult } from "../shared/pricing";
 import { newRowKey, type SalesItemOption, type SalesLineRow } from "../shared/SalesLineGrid";
-
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 // Stored values. "Breakup" (lowercase u) matches what the earlier quotation code sent.
@@ -81,8 +81,9 @@ function blankLine<T extends SalesLineRow>(): T {
   } as unknown as T;
 }
 
-const COMPUTED: CSSProperties = { background: "#f5f5f5" };
-const LOCKED: CSSProperties = { background: "#e6e6e6" };
+// ag-Grid's own style type (not React's CSSProperties): values must be string | number
+const COMPUTED: CellStyle = { background: "#f5f5f5" };
+const LOCKED: CellStyle = { background: "#e6e6e6" };
 
 // A Breakup line's Rate is always the sum of its sub item rates.
 function normalizeRows<T extends SalesLineRow>(rows: T[]): T[] {
@@ -310,8 +311,8 @@ export function QuotationGrid<T extends SalesLineRow>({
 
   // locked sub item cells (and a Breakup line's computed Rate) are grey
   const lockStyle =
-    (colId: string, base?: CSSProperties) =>
-    (p: CellClassParams<R>): CSSProperties | undefined => {
+    (colId: string, base?: CellStyle) =>
+    (p: CellClassParams<R>): CellStyle | undefined => {
       const d = p.data;
       if (d && !canEdit(colId, d) && (d.__kind === "child" || colId === "rate")) return LOCKED;
       return base;
@@ -319,7 +320,7 @@ export function QuotationGrid<T extends SalesLineRow>({
 
   // AG Grid re-reads a cell through valueGetter after the setter runs, so the setter
   // stores the typed value on the grid's own row copy; the form is updated in onCellValueChanged.
-  const col = (colId: string, extra: ColDef<R>, base?: CSSProperties): ColDef<R> => ({
+  const col = (colId: string, extra: ColDef<R>, base?: CellStyle): ColDef<R> => ({
     colId,
     editable: (p) => edit && !!p.data && canEdit(colId, p.data),
     valueSetter: (p) => {
@@ -360,7 +361,7 @@ export function QuotationGrid<T extends SalesLineRow>({
         valueGetter: (p) => (p.data && p.data.__kind === "main" ? (p.data.__priced?.[key] as number | undefined) : undefined),
         valueFormatter: (p) => (p.value == null ? "" : money(p.value)),
       },
-      { ...COMPUTED, fontWeight: bold ? 600 : undefined },
+      { ...COMPUTED, ...(bold ? { fontWeight: 600 } : {}) },
     );
 
   const mainOnly = <V,>(r: R, get: () => V): V | "" => (r.__kind === "main" ? get() : "");
@@ -457,7 +458,8 @@ export function QuotationGrid<T extends SalesLineRow>({
   const taxCol = columnDefs.find((c) => c.colId === "tax");
   if (taxCol) {
     const lock = lockStyle("tax");
-    taxCol.cellStyle = (p) => lock(p) ?? (edit && p.data?.__kind === "main" && p.data.tax == null ? { background: "#fffbe6" } : undefined);
+    taxCol.cellStyle = (p: CellClassParams<R>): CellStyle | undefined =>
+      lock(p) ?? (edit && p.data?.__kind === "main" && p.data.tax == null ? { background: "#fffbe6" } : undefined);
   }
 
   function onCellValueChanged(e: CellValueChangedEvent<R>) {
