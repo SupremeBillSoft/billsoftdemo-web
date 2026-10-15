@@ -22,6 +22,7 @@ import {
 import type { LineTaxContext } from "../../../lib/gst/lineTax";
 import type { PricedLineResult } from "./pricing";
 import type { PricedLine } from "./types";
+import { uuid } from "../../../lib/uuid";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -40,9 +41,7 @@ export interface SalesItemOption {
 
 // Unsaved rows have no id yet; this client-only key keeps each row's
 // inputs stable while rows are added / removed (the server ignores it).
-export function newRowKey(): string {
-  return crypto.randomUUID();
-}
+export const newRowKey = () => uuid();
 
 export function newLineFor(item: SalesItemOption, taxContext: LineTaxContext): SalesLineRow {
   return {
